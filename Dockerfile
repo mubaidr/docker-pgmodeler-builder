@@ -1,8 +1,11 @@
 FROM ubuntu:latest
-LABEL author="Muhammad Ubaid Raza <mubaidr@gmail.com>"
 LABEL maintainer="Muhammad Ubaid Raza <mubaidr@gmail.com>"
-LABEL version="1.0"
-LABEL description="A [Docker](https://www.docker.com) container that allows you to build [pgModeler](https://pgmodeler.io/) with one simple command."
+LABEL org.opencontainers.image.authors="Muhammad Ubaid Raza <mubaidr@gmail.com>"
+LABEL org.opencontainers.image.url="https://github.com/mubaidr/docker-pgmodeler-builder"
+LABEL org.opencontainers.image.source ="https://github.com/mubaidr/docker-pgmodeler-builder"
+LABEL org.opencontainers.image.version="1.0"
+LABEL org.opencontainers.image.title="pgmodeler-builder"
+LABEL org.opencontainers.image.description="A [Docker](https://www.docker.com) container that allows you to build [pgModeler](https://pgmodeler.io/) with one simple command."
 
 RUN apt-get update && \
   apt-get install -y \
