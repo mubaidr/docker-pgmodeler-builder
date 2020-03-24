@@ -20,7 +20,7 @@ function clone_plugin_source() {
 
      cd plugins
      git checkout develop
-     rmm -rf dummy
+     rm -rf dummy
 }
 
 function check_version() {
