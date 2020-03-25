@@ -94,7 +94,7 @@ clone_source
 if [ "${1}" == "windeploy.sh" ]; then
      echo "Building using windeploy.sh..."
      cd ${DIR_SRC_PGMODELER}
-     bash ./windeploy.sh
+     sh ./windeploy.sh
 else
      echo "Building using src/script/build.sh..."
      check_version ${1}
