@@ -90,5 +90,13 @@ function build() {
 
 clone_source
 clone_plugin_source
-check_version ${1}
-build
+
+if [ "${1}" = "windeploy.sh" ]; then
+     echo "Building using windeploy.sh..."
+     cd ${DIR_SRC_PGMODELER}
+     sudo ./windeploy.sh
+else
+     echo "Building using src/script/build.sh..."
+     check_version ${1}
+     build
+fi
