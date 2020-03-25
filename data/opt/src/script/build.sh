@@ -28,9 +28,9 @@ function checkout_version() {
      git tag >${tags_file}
 
      if [[ "${1}" =~ $(echo ^\($(paste -sd'|' ${tags_file})\)$) ]]; then
-          git checkout tags/${1} -b master
+          git checkout tags/${1}
      else
-          git checkout tags/latest_tag -b master
+          git checkout tags/${latest_tag}
      fi
 }
 
@@ -39,7 +39,7 @@ function checkout_latest_branch() {
 
      local latest_branch=$(git for-each-ref --format='%(refname:lstrip=3)' --sort=-creatordate --count 1)
 
-     git checkout latest_branch
+     git checkout ${latest_branch}
 }
 
 function build() {
