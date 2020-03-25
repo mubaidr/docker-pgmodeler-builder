@@ -89,7 +89,7 @@ function build() {
 }
 
 clone_source
-clone_plugin_source
+# clone_plugin_source
 
 if [ "${1}" = "windeploy.sh" ]; then
      echo "Building using windeploy.sh..."
