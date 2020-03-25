@@ -14,25 +14,32 @@ function clone_source() {
 }
 
 function clone_plugin_source() {
-     cd ${DIR_SRC}/pgmodeler
+     cd ${DIR_SRC_PGMODELER}
 
      git clone https://github.com/pgmodeler/plugins.git
-
-     cd plugins
-     git checkout develop
-     # rm -rf dummy
 }
 
-function check_version() {
-     local tags_file=$(mktemp)
-
+function checkout_version() {
      cd ${DIR_SRC_PGMODELER}
+
+     local tags_file=$(mktemp)
+     local latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
 
      git tag >${tags_file}
 
      if [[ "${1}" =~ $(echo ^\($(paste -sd'|' ${tags_file})\)$) ]]; then
-          git checkout -b ${1} ${1}
+          git checkout tags/${1} -b master
+     else
+          git checkout tags/latest_tag -b master
      fi
+}
+
+function checkout_latest_branch() {
+     cd ${DIR_SRC_PGMODELER}
+
+     local latest_branch=$(git for-each-ref --format='%(refname:lstrip=3)' --sort=-creatordate --count 1)
+
+     git checkout latest_branch
 }
 
 function build() {
@@ -88,15 +95,36 @@ function build() {
      cp -R ${dir_plugins}/printsupport ${dir_plugins_install}
 }
 
+echo "Cloning latest source for pgmodeler ..."
 clone_source
-# clone_plugin_source
 
 if [ "${1}" == "windeploy.sh" ]; then
      echo "Building using windeploy.sh..."
      cd ${DIR_SRC_PGMODELER}
+
+     if [ "${2}" == "plugins" ]; then
+          echo "Cloning latest source for plugins ..."
+          clone_plugin_source
+     fi
+
+     chmod +x ./windeploy.sh
      sh ./windeploy.sh
-else
-     echo "Building using src/script/build.sh..."
-     check_version ${1}
-     build
+
+     exit 0
 fi
+
+if [ "${1}" == "latest" ]; then
+     echo "Checkout latest alpha/beta tag ..."
+     checkout_latest_branch
+else
+     echo "Checkout custom tag (if provided) ..."
+     checkout_version ${1}
+fi
+
+if [ "${2}" == "plugins" ]; then
+     echo "Cloning latest source for plugins ..."
+     clone_plugin_source
+fi
+
+echo 'Building using src/script/build.sh ...'
+build

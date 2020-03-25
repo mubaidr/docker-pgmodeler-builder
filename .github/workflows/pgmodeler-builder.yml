@@ -9,6 +9,10 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    # runs every first of month
+    - cron: '0 0 1 * *'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -32,10 +36,24 @@ jobs:
 
       # prepare artifact
       - name: Prepare artifact
-        run: tar -cvzf ${{ github.workspace }}/pgmodeler-dist.tar.gz ${{ github.workspace }}/pgmodeler/
+        run: tar -cvzf ${{ github.workspace }}/pgmodeler.tar.gz ${{ github.workspace }}/pgmodeler/
 
       # upload artifact
       - uses: actions/upload-artifact@v2-preview
         with:
-          name: pgmodeler
-          path: ${{ github.workspace }}/pgmodeler-dist.tar.gz
+          name: pgmodeler-stable
+          path: ${{ github.workspace }}/pgmodeler.tar.gz
+
+      # Run docker container
+      - name: Run docker image
+        run: docker run -v ${{ github.workspace }}/pgmodeler:/opt/pgmodeler pgmodeler NULL plugins
+
+      # prepare artifact
+      - name: Prepare artifact
+        run: tar -cvzf ${{ github.workspace }}/pgmodeler.tar.gz ${{ github.workspace }}/pgmodeler/
+
+      # upload artifact
+      - uses: actions/upload-artifact@v2-preview
+        with:
+          name: pgmodeler-stable-plugins
+          path: ${{ github.workspace }}/pgmodeler.tar.gz

@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: pgmodeler-builder-alt
+name: pgmodeler-builder-latest
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -9,6 +9,10 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    # runs every first of month
+    - cron: '0 0 1 * *'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -28,14 +32,28 @@ jobs:
 
       # Run docker container
       - name: Run docker image
-        run: docker run -v ${{ github.workspace }}/pgmodeler:/opt/pgmodeler pgmodeler windeploy.sh
+        run: docker run -v ${{ github.workspace }}/pgmodeler:/opt/pgmodeler pgmodeler latest
 
       # prepare artifact
       - name: Prepare artifact
-        run: tar -cvzf ${{ github.workspace }}/pgmodeler-dist.tar.gz ${{ github.workspace }}/pgmodeler/
+        run: tar -cvzf ${{ github.workspace }}/pgmodeler.tar.gz ${{ github.workspace }}/pgmodeler/
 
       # upload artifact
       - uses: actions/upload-artifact@v2-preview
         with:
-          name: pgmodeler
-          path: ${{ github.workspace }}/pgmodeler-dist.tar.gz
+          name: pgmodeler-latest
+          path: ${{ github.workspace }}/pgmodeler.tar.gz
+
+      # Run docker container
+      - name: Run docker image
+        run: docker run -v ${{ github.workspace }}/pgmodeler:/opt/pgmodeler pgmodeler latest plugins
+
+      # prepare artifact
+      - name: Prepare artifact
+        run: tar -cvzf ${{ github.workspace }}/pgmodeler.tar.gz ${{ github.workspace }}/pgmodeler/
+
+      # upload artifact
+      - uses: actions/upload-artifact@v2-preview
+        with:
+          name: pgmodeler-latest-plugins
+          path: ${{ github.workspace }}/pgmodeler.tar.gz
