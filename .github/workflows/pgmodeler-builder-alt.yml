@@ -24,11 +24,11 @@ jobs:
 
       # Build docker container
       - name: Build docker image
-        run: docker build . -t pgmodeler
+        run: docker build -t pgmodeler .
 
       # Run docker container
       - name: Run docker image
-        run: docker run pgmodeler -v ${{ github.workspace }}/pgmodeler:/opt/pgmodeler windeploy.sh
+        run: docker run -v ${{ github.workspace }}/pgmodeler:/opt/pgmodeler pgmodeler windeploy.sh
 
       # prepare artifact
       - name: Prepare artifact
