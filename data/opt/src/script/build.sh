@@ -20,7 +20,7 @@ function clone_plugin_source() {
 
      cd plugins
      git checkout develop
-     rm -rf dummy
+     # rm -rf dummy
 }
 
 function check_version() {
@@ -89,7 +89,7 @@ function build() {
 }
 
 clone_source
-# clone_plugin_source
+clone_plugin_source
 
 if [ "${1}" = "windeploy.sh" ]; then
      echo "Building using windeploy.sh..."
